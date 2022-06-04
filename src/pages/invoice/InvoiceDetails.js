@@ -56,7 +56,7 @@ export default function InvoiceDetails() {
             { name: id },
           ]}
         />
-        <Invoice data={invoice} />
+        <Invoice  />
       </Container>) :
       <Navigate to="/po" replace /> 
       }

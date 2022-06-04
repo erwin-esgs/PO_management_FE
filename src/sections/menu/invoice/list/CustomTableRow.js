@@ -2,10 +2,11 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Checkbox, TableRow, TableCell, Typography, MenuItem, Button, Link } from '@mui/material';
+import { Checkbox, TableRow, TableCell, Typography, MenuItem, Button } from '@mui/material';
 // components
 // import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
+import Label from '../../../../components/Label';
 import { TableMoreMenu } from '../../../../components/table';
 import  ButtonPopover  from '../../../../components/popover/ButtonPopover';
 import  InvoiceForm  from '../form/InvoiceForm';
@@ -22,7 +23,7 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 export default function CustomTableRow({ row, selected, selectedOne, onSelectRow }) {
 
   const dispatch = useDispatch()
-  
+  const theme = useTheme();
   const { id, inv_number, po_number, id_project, due_date, value, vat, description, payment, created_by } = row;
 
   const [ openMenu , setOpenMenuActions ] = useState(null);
@@ -46,14 +47,23 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
   const valueString = new Intl.NumberFormat().format(parseFloat(value));
   const vatString = new Intl.NumberFormat().format(parseFloat(vat));
 
-  let paidPercentage = 0
-  const arrPayment = payment? JSON.parse(payment) : null
-  if(Array.isArray(arrPayment)){
-    arrPayment.forEach(element => {
-      if("payment_date" in element){
-        paidPercentage += element.percentage
-      }
+  let rows
+  try {
+    rows = JSON.parse(payment)
+  } catch (error) {
+    rows = []
+  }
+  let status = "unpaid"
+  if(rows.length > 0){
+    status = "partial"
+    let total = 0
+    rows.forEach(element => {
+      total += element.payment_value
+      total += element.payment_vat
     });
+    if(total === (value + vat) ){
+      status = "paid"
+    }
   }
   
   return (
@@ -65,11 +75,25 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{inv_number}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{po_number} : {id_project}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{due_date}</TableCell> 
+      <TableCell align="left" sx={{ textTransform: 'uppercase' , color: 'warning' }} >
+        {/* <Label
+          variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
+          color={
+            (status === 'paid' && 'success') ||
+            (status === 'partial' && 'warning') ||
+            (status === 'unpaid' && 'error') ||
+            'default'
+          }
+          sx={{ textTransform: 'uppercase', mb: 1 }}
+        >
+          {status}
+        </Label> */}
+        {status}
+      </TableCell> 
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{valueString}</TableCell> 
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{vatString}</TableCell> 
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{description}</TableCell> 
-      {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{ new Intl.NumberFormat().format(parseFloat( paidPercentage * value / 100 ))  }</TableCell>
-      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{ new Intl.NumberFormat().format(parseFloat( value-(paidPercentage * value / 100) ))  }</TableCell> */}
+      {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{ new Intl.NumberFormat().format(parseFloat( value-(paidPercentage * value / 100) ))  }</TableCell>  */}
       {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{created_by}</TableCell> */}
 
       <TableCell align="center" sx={{width: '15%'}}>

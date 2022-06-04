@@ -257,41 +257,19 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
     if (filterName) {
       tableData = tableData.filter((item) => {
         const key = Object.keys(item)
-        let result1 , result2 , result3 , result4 , result5 , result6
-        try {
-          result1 = item[key[0]].toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        } catch (error) {
-          result1 = false
-        }
-        try {
-          result2 = item[key[1]].toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        } catch (error) {
-          result2 = false
-        }
-        try {
-          result3 = item[key[2]].toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        } catch (error) {
-          result3 = false
-        }
-        try {
-          result4 = item[key[3]].toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        } catch (error) {
-          result4 = false
-        }
-        try {
-          result5 = item[key[4]].toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        } catch (error) {
-          result5 = false
-        }
-        try {
-          result6 = item[key[5]].toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-        } catch (error) {
-          result6 = false
-        }
-        return  result1 || result2 || result3 || result4 || result5 || result6
+        let result=false
+        key.forEach(element => {
+          try {
+            result = ( item[element].toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
+          } catch (error) {
+            result = result || false
+          }
+        });
+        return result
       })
       ;
     }
+    
     if (filterStatus){
       if (filterStatus !== 'all') {
         tableData = tableData.filter((item) => item.status === filterStatus);

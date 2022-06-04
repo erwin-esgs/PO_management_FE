@@ -13,7 +13,7 @@ import Iconify from '../../../../components/Iconify';
 import { FormProvider, RHFTextField, RHFCheckbox, RHFSelect } from '../../../../components/hook-form';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { editData, getDetail } from '../../../../redux/slices/po';
+import { editData, getDetail } from '../../../../redux/slices/invoice';
 // import { description } from 'src/_mocks/text';
 
 // ----------------------------------------------------------------------
@@ -25,9 +25,9 @@ PaymentForm.propTypes = {
 export default function PaymentForm({text="" , formData=null}) {
 
   const dispatch = useDispatch()
-  const { po } = useSelector((state) =>  state.po );
+  const { invoice } = useSelector((state) =>  state.invoice );
   
-  let payment = JSON.parse( po.payment )
+  let payment = JSON.parse( invoice.payment )
 
   const [paymentNumber , setPaymentNumber] = useState(0);
 

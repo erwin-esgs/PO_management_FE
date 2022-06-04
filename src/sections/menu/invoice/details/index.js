@@ -34,7 +34,7 @@ import Scrollbar from '../../../../components/Scrollbar';
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { editData, getDetail } from '../../../../redux/slices/invoice';
 
-// import ButtonPopover from '../../../../components/popover/ButtonPopover';
+import ButtonPopover from '../../../../components/popover/ButtonPopover';
 import PaymentForm from '../form/PaymentForm';
 
 // ----------------------------------------------------------------------
@@ -48,11 +48,11 @@ const RowResultStyle = styled(TableRow)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-InvoiceDetails.propTypes = {
-  data: PropTypes.object,
-};
+// InvoiceDetails.propTypes = {
+//   data: PropTypes.object,
+// };
 
-export default function InvoiceDetails({ data=null }) {
+export default function InvoiceDetails() {
   const [ openMenu , setOpenMenuActions ] = useState(null);
   const [ selectedIndex , setSelectedIndex ] = useState(0);
   const theme = useTheme();
@@ -61,33 +61,27 @@ export default function InvoiceDetails({ data=null }) {
 
   const { invoice } = useSelector((state) =>  state.invoice );
 
-  if (!data) {
-    return null
-  }
-  console.log(data)
-  // const {
-  //   items,
-  //   taxes,
-  //   status,
-  //   dueDate,
-  //   discount,
-  //   invoiceTo,
-  //   createDate,
-  //   totalPrice,
-  //   invoiceFrom,
-  //   invoiceNumber,
-  //   subTotalPrice,
-  // } = data;
-
+  let subTotalPrice = 0
+  
   let rows
   try {
-    rows = JSON.parse(data.payment)
+    rows = JSON.parse(invoice.payment)
   } catch (error) {
     rows = []
   }
-
-  const status = "paid"
-  let subTotalPrice = 0
+  let status = "unpaid"
+  if(rows.length > 0){
+    status = "partial"
+    let total = 0
+    rows.forEach(element => {
+      total += element.payment_value
+      total += element.payment_vat
+    });
+    if(total === (invoice.value + invoice.vat) ){
+      status = "paid"
+    }
+  }
+  
   
   const handleOpenMenu = (event,idx) => {
     setSelectedIndex(idx)
@@ -98,26 +92,7 @@ export default function InvoiceDetails({ data=null }) {
     setOpenMenuActions(null);
   }; 
 
-  // const handlePayment = (e) => {
-  //   if(selectedIndex !== null && selectedIndex !== undefined && data !== null){
-  //     if(!rows[selectedIndex].payment_date){
-  //       console.log(rows[selectedIndex])
-  //     }
-  //   }
-  //   // if(selectedIndex !== null && selectedIndex !== undefined && data !== null){
-  //   //   const todayDate = new Date().toISOString().split('T')[0]
-  //   //   if(!rows[selectedIndex].due_date){
-  //   //     rows[selectedIndex].due_date = todayDate
-
-  //   //     Promise.resolve().then( () => dispatch(editData(data.id, { payment: JSON.stringify(rows) })) )
-  //   //     .then( () =>  dispatch(getDetail(data.id))  )
-  //   //   }
-  //   // }
-  // }; 
-
-  // const onDeleteRow = (idx, row) => {
-  //   console.log(idx)
-  // }
+  
 
   return (
     <>
@@ -134,8 +109,8 @@ export default function InvoiceDetails({ data=null }) {
                 variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
                 color={
                   (status === 'paid' && 'success') ||
-                  (status === 'unpaid' && 'warning') ||
-                  (status === 'overdue' && 'error') ||
+                  (status === 'partial' && 'warning') ||
+                  (status === 'unpaid' && 'error') ||
                   'default'
                 }
                 sx={{ textTransform: 'uppercase', mb: 1 }}
@@ -143,7 +118,7 @@ export default function InvoiceDetails({ data=null }) {
                 {status}
               </Label>
 
-              <Typography variant="h6">{data.inv_number}</Typography>
+              <Typography variant="h6">{invoice.inv_number}</Typography>
             </Box>
           </Grid>
 
@@ -151,38 +126,38 @@ export default function InvoiceDetails({ data=null }) {
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Vendor Name
             </Typography>
-            <Typography variant="body2">{data.vendor_name}</Typography>
-            <Typography variant="body2">Email: {data.email}</Typography>
-            <Typography variant="body2">Phone: {data.phone}</Typography>
-            <Typography variant="body2">Contact: {data.contact}</Typography>
-            <Typography variant="body2">Manager: {data.manager}</Typography>
-            <Typography variant="body2">Bank Acc: {data.bank_acc}</Typography>
+            <Typography variant="body2">{invoice.vendor_name}</Typography>
+            <Typography variant="body2">Email: {invoice.email}</Typography>
+            <Typography variant="body2">Phone: {invoice.phone}</Typography>
+            <Typography variant="body2">Contact: {invoice.contact}</Typography>
+            <Typography variant="body2">Manager: {invoice.manager}</Typography>
+            <Typography variant="body2">Bank Acc: {invoice.bank_acc}</Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Info
             </Typography>
-            <Typography variant="body2">{data.full_name}</Typography>
-            <Typography variant="body2">NPWP: {data.npwp ? data.npwp : ''}</Typography>
-            <Typography variant="body2">SIUP: {data.siup ? data.siup  : ''}</Typography>
-            <Typography variant="body2">{data.address ? data.address : ''}</Typography>
+            <Typography variant="body2">{invoice.full_name}</Typography>
+            <Typography variant="body2">NPWP: {invoice.npwp ? invoice.npwp : ''}</Typography>
+            <Typography variant="body2">SIUP: {invoice.siup ? invoice.siup  : ''}</Typography>
+            <Typography variant="body2">{invoice.address ? invoice.address : ''}</Typography>
           </Grid>
 
-          <Grid item xs={12} sx={{ mb: 5 }}>
+          <Grid item xs={12} sx={{ mb: 2 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Description
             </Typography>
-            <Typography variant="body2">{data.description ? data.description : ''}</Typography>
+            <Typography variant="body2">{invoice.description ? invoice.description : ''}</Typography>
           </Grid>
-
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Due date
-            </Typography>
-            <Typography variant="body2">asdasd</Typography>
-          </Grid> */}
-
+          <Grid item xs={12} sx={{ mb: 2 }} >
+            <Box display="flex" justifyContent="flex-end">
+              <ButtonPopover text='Payment' startIcon={<Iconify icon={'eva:plus-fill'}  />} >
+                <PaymentForm text="Add Payment" />
+              </ButtonPopover>
+            </Box>
+          </Grid>
+          
         </Grid>
 
         <Scrollbar>
@@ -197,19 +172,18 @@ export default function InvoiceDetails({ data=null }) {
                 <TableRow>
                   <TableCell width={40}>#</TableCell>
                   <TableCell align="left">Description</TableCell>
-                  <TableCell align="left">Due date</TableCell>
-                  <TableCell align="left">Payment date</TableCell>
-                  <TableCell align="center">%</TableCell>
-                  <TableCell align="right">Outstanding</TableCell>
+                  <TableCell align="right">Payment date</TableCell>
+                  <TableCell align="right">Value</TableCell>
+                  <TableCell align="right">VAT</TableCell>
                   <TableCell width={40}/>
                 </TableRow>
               </TableHead>
 
               <TableBody>
                 {rows.map((row, idx) => {
-                  const amount = (row.percentage * data.value / 100)
                   if(row.payment_date){
-                    subTotalPrice += amount
+                    subTotalPrice += row.payment_value
+                    subTotalPrice += row.payment_vat
                   }
                   
                   return (<TableRow
@@ -219,19 +193,14 @@ export default function InvoiceDetails({ data=null }) {
                     }}
                   >
                     <TableCell >{idx + 1}</TableCell>
-                    <TableCell align="left">{row.description}</TableCell>
-                    <TableCell align="left">
-                      <Box sx={{ maxWidth: 560 }}>
-                        <Typography variant="subtitle2">{row.due_date ? row.due_date : ''}</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="left">
+                    <TableCell align="left">{row.payment_description}</TableCell>
+                    <TableCell align="right">
                       <Box sx={{ maxWidth: 560 }}>
                         <Typography variant="subtitle2">{row.payment_date ? row.payment_date : ''}</Typography>
                       </Box>
                     </TableCell>
-                    <TableCell align="center">{row.percentage}</TableCell>
-                    <TableCell align="right">{amount.toLocaleString()}</TableCell>
+                    <TableCell align="right">{row.payment_value.toLocaleString()}</TableCell>
+                    <TableCell align="right">{row.payment_vat.toLocaleString()}</TableCell>
                     <TableCell align="right"> {/* <Button onClick={()=>onDeleteRow( idx , row )}></Button> */}
                       <TableMoreMenu
                         open={openMenu}
@@ -239,11 +208,9 @@ export default function InvoiceDetails({ data=null }) {
                         onClose={handleCloseMenu}
                         actions={
                           <>
-                            {(!rows[selectedIndex].payment_date) ? 
-                            (<PaymentForm text="Add Payment" selectedIndex={selectedIndex} />) : 
-                            (<MenuItem
+                            <MenuItem
                               onClick={async ( ) => {
-                                delete rows[selectedIndex].payment_date;
+                                rows.splice(selectedIndex, 1)
                                 Promise.resolve().then( () => dispatch(editData(invoice.id, { payment: JSON.stringify(rows) })) )
                                 .then( () =>  dispatch(getDetail(invoice.id))  )
                                 handleCloseMenu();
@@ -252,29 +219,8 @@ export default function InvoiceDetails({ data=null }) {
                             >
                               <Iconify icon={'eva:trash-2-outline'} />
                               Cancel
-                            </MenuItem>) }
-                            {/* <ButtonPopover text='Payment' startIcon={<Iconify icon={'eva:plus-fill'}  />} >
-                              <PaymentForm text="Add Payment" />
-                            </ButtonPopover> */}
-
-                            {/* <MenuItem
-                              onClick={( e ) => {
-                                handlePayment(e);
-                              }}
-                              sx={{ color: 'primary.main' }}
-                            >
-                              <Iconify icon={'ant-design:check-outlined'} />
-                              Payment
-                            </MenuItem> */}
-                            {/* <MenuItem
-                              onClick={( e ) => {
-                                handleCloseMenu();
-                              }}
-                              sx={{ color: 'error.main' }}
-                            >
-                              <Iconify icon={'eva:trash-2-outline'} />
-                              Delete
-                            </MenuItem> */}
+                            </MenuItem>
+                            
                           </>
                         }
                       />
@@ -301,9 +247,11 @@ export default function InvoiceDetails({ data=null }) {
                     <Typography>Total Outstanding</Typography>
                   </TableCell>
                   <TableCell align="right" width={120}>
-                    <Typography sx={{ color: 'error.main' }}>{ (data.value - subTotalPrice).toLocaleString() }</Typography>
+                    <Typography sx={{ color: 'error.main' }}>{ (invoice.value + invoice.vat - subTotalPrice).toLocaleString() }</Typography>
                   </TableCell>
                 </RowResultStyle>
+
+                
 
                 {/* <RowResultStyle>
                   <TableCell colSpan={3} />
@@ -321,7 +269,17 @@ export default function InvoiceDetails({ data=null }) {
                     <Typography variant="h6">Total</Typography>
                   </TableCell>
                   <TableCell align="right" width={140}>
-                    <Typography variant="h6">{data.value.toLocaleString()}</Typography>
+                    <Typography variant="h6">{invoice.value.toLocaleString()}</Typography>
+                  </TableCell>
+                </RowResultStyle>
+
+                <RowResultStyle>
+                  <TableCell colSpan={3} />
+                  <TableCell align="right">
+                  <Typography variant="h6">VAT</Typography>
+                  </TableCell>
+                  <TableCell align="right" width={120}>
+                    <Typography variant="h6">{ (invoice.vat).toLocaleString() }</Typography>
                   </TableCell>
                 </RowResultStyle>
 
