@@ -1,0 +1,75 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "airbnb",
+    "plugin:jsx-a11y/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "react",
+    "react-hooks",
+    "prettier"
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "requireConfigFile": false,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "impliedStrict": true
+    }
+  },
+  "rules": {
+
+    "jsx-a11y/anchor-is-valid": 0,
+    "react/react-in-jsx-scope": 0,
+    "react/no-array-index-key": 0,
+    "react/no-unused-prop-types": 1,
+    "react-hooks/rules-of-hooks": 2,
+    "no-promise-executor-return": 0,
+    "no-unsafe-optional-chaining": 0,
+    "react/require-default-props": 0,
+    "react/no-unescaped-entities": 0,
+    "import/prefer-default-export": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-filename-extension": 0,
+    "react/jsx-no-useless-fragment": 0,
+    "react/jsx-curly-brace-presence": 0,
+    "react/destructuring-assignment": 0,
+    "import/no-extraneous-dependencies": 0,
+    "react/no-unstable-nested-components": 0,
+    "react/function-component-definition": 0,
+    "react/jsx-no-constructed-context-values": 0,
+    "camelcase": ["off"],
+    "one-var": ["off"],
+    "no-console": ["off"],
+    "no-shadow": ["off"],
+    "react/forbid-prop-types": ["off"],
+    "no-use-before-define": ["off"],
+    "no-param-reassign": ["off"],
+    "import/no-cycle": ["off"],
+    "no-throw-literal": ["off"],
+    "no-underscore-dangle": ["off"],
+    "prefer-const": ["off"],
+    "no-plusplus": ["off"],
+    "react/no-children-prop": ["off"],
+    "no-unused-vars": [
+      1,
+      {
+        "ignoreRestSiblings": false
+      }
+    ],
+    "prefer-destructuring": [
+      1,
+      {
+        "object": true,
+        "array": false
+      }
+    ]
+  }
+}
