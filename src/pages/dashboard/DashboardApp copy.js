@@ -27,7 +27,7 @@ export default function DashboardApp() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
 
-  const {  listPt  } = useSelector((state) =>  state.dashboard );
+  const {  totalPo , totalPayment , totalOutstanding  } = useSelector((state) =>  state.dashboard );
   const todayDate = new Date(new Date( ).getTime() + 60 * 60 * 7 * 1000).toISOString().split('T')[0]
   const [ dateFilter, setDateFilter ] = useState([ todayDate , todayDate ])
 
@@ -46,27 +46,27 @@ export default function DashboardApp() {
             </Box>
           </Grid>
 
-          {/* <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="Total Outstanding"
               percent={-0.1}
-              // total={totalOutstanding}
+              total={totalOutstanding}
               chartColor={theme.palette.chart.red[0]}
               chartData={[8, 9, 31, 8, 16, 37, 8, 33, 46, 31]}
             />
-          </Grid> */}
+          </Grid>
 
-          {/* <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="Total Payment"
               percent={0.2}
-              // total={totalPayment}
+              total={totalPayment}
               chartColor={theme.palette.primary.main}
               chartData={[20, 41, 63, 33, 28, 35, 50, 46, 11, 26]}
             />
-          </Grid> */}
+          </Grid>
 
-          {/* <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="Total PO"
               percent={2.6}
@@ -74,7 +74,7 @@ export default function DashboardApp() {
               chartColor={theme.palette.chart.blue[0]}
               chartData={[5, 18, 12, 51, 68, 11, 39, 37, 27, 20]}
             />
-          </Grid> */}
+          </Grid>
 
           {/* <Grid item xs={12} md={3}>
             <AppWidgetSummary
@@ -87,7 +87,7 @@ export default function DashboardApp() {
           </Grid> */}
 
           <Grid item xs={12} >
-            <TableRecap data={listPt} />
+            <TableRecap />
           </Grid>
 
         </Grid>

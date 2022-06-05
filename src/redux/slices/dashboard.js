@@ -41,6 +41,7 @@ const slice = createSlice({
     },
 
     // GET PRODUCTS
+    /*
     setDatas(state, action) {
       state.isLoading = false;
       state.totalPo = action.payload.total_po;
@@ -48,6 +49,11 @@ const slice = createSlice({
       state.totalOutstanding = action.payload.total_outstanding;
       state.totalVat = action.payload.total_vat;
       state.listPt = action.payload.pt;
+    },
+    */
+    setDatas(state, action) {
+      state.isLoading = false;
+      state.listPt = action.payload;
     },
 
     // SET DATE

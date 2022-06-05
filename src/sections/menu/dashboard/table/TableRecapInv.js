@@ -1,4 +1,4 @@
-import {useEffect , useState} from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
      Box, Collapse, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper 
@@ -32,46 +32,39 @@ import { setSession } from '../../../../utils/jwt';
 //   },
 // }));
 
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
-  };
-}
-
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = useState(false);
-  const [isLoadingRow, setIsLoadingRow] = useState(false);
-  const [listPo, setListPo] = useState([]);
-  const { startDate , endDate } = useSelector((state) =>  state.dashboard );
-  const { pts } = useSelector((state) =>  state.pt );
+  const [open, setOpen] = React.useState(false);
+  const [isLoadingRow, setIsLoadingRow] = React.useState(false);
 
+  const [listPo, setListPo] = React.useState([]);
+  const { startDate , endDate } = useSelector((state) =>  state.dashboard );
+  
   async function getData(id) {
-    setIsLoadingRow(true)
-    const response = await axios.post('/api/dashboardPo' , {id_pt : id , startDate , endDate});
-    if(response.data){
-      Promise.resolve().then( () => setListPo(response.data.data) )
-      .then( () => setSession(response.data.token) )
-      .then( () => setIsLoadingRow(false) )
-    }
+    // setIsLoadingRow(true)
+    // const response = await axios.post('/api/dashboardPo' , {id_pt : id , startDate , endDate});
+    // if(response.data){
+    //   Promise.resolve().then( () => setListPo(response.data.data) )
+    //   .then( () => setSession(response.data.token) )
+    //   .then( () => setIsLoadingRow(false) )
+    // }
   }
+
+  let totalPaymentAllInvoice = 0
+  let totalVatAllInvoice = 0
+  row?.invoice?.forEach((invoice) => {
+    let paymentEachInvoice 
+    try {
+      paymentEachInvoice = JSON.parse(invoice.payment)
+    } catch (error) {
+      paymentEachInvoice = []
+    }
+    paymentEachInvoice.forEach((item)=>{
+      totalPaymentAllInvoice += item.payment_value
+      totalPaymentAllInvoice += item.payment_vat
+      totalVatAllInvoice += item.payment_vat
+    })
+  })
 
   return (
     <>
@@ -82,45 +75,70 @@ function Row(props) {
             size="small"
             onClick={() => {
               setOpen(!open)
-              // getData(row.id)
+              getData(row.id)
             }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row}
+          {row.po_number}
         </TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat( (Math.floor(Math.random() * 10) + 1)*10000000 )) }</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat( (Math.floor(Math.random() * 10) + 1)*10000000 )) }</TableCell>
+        <TableCell align="left">{row.vendor_name}</TableCell>
+        <TableCell align="right">{ row.invoice.length }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.value))  }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.value - totalPaymentAllInvoice)) }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalPaymentAllInvoice)) }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalVatAllInvoice)) }</TableCell>
+        <TableCell align="right">{row.created_by}</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               { isLoadingRow ? (<SkeletonLoading isLoading={isLoadingRow} top={0.05} bot={0.05} /> ) : (
                 <>
                 <Typography variant="h6" gutterBottom component="div">
-                  PT List
+                  List Invoice : {row.vendor_name}
                 </Typography>
                 <Table size="large" aria-label="purchases">
                   <TableHead>
                     <TableRow>
-                      <TableCell>Full Name</TableCell>
-                      <TableCell>Short Name</TableCell>
-                      <TableCell align="right">PPN IN</TableCell>
-                      <TableCell align="right">PPN OUT</TableCell>
+                      <TableCell align="left">Invoice Number</TableCell>
+                      <TableCell align="left">Date</TableCell>
+                      <TableCell align="left">Project</TableCell>
+                      <TableCell align="right">Value</TableCell>
+                      <TableCell align="right">Outstanding</TableCell>
+                      <TableCell align="right">Paid</TableCell>
+                      <TableCell align="right">VAT</TableCell>
+                      <TableCell align="right">Input By</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {pts?.map((row2) => 
+                    {row?.invoice?.map((row2) => {
+                      let paymentEachInvoice 
+                      try {
+                        paymentEachInvoice = JSON.parse(row2.payment)
+                      } catch (error) {
+                        paymentEachInvoice = []
+                      }
+                      let totalPaymentEachInvoice = 0
+                      paymentEachInvoice?.forEach((item)=>{
+                        totalPaymentEachInvoice += item.payment_value 
+                        totalPaymentEachInvoice += item.payment_vat
+                      })
+                      return (
                       <TableRow key={row2.id} >
-                        <TableCell component="th" scope="row">{row2.full_name}</TableCell>
-                        <TableCell>{row2.pt_name}</TableCell>
-                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat( (Math.floor(Math.random() * 10) + 1)*1000000 )) }</TableCell>
-                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat( (Math.floor(Math.random() * 10) + 1)*1000000 )) }</TableCell>
+                        <TableCell align="left" component="th" scope="row">{row2.inv_number}</TableCell>
+                        <TableCell align="left">{row2.due_date}</TableCell>
+                        <TableCell align="left">{row.project_code}</TableCell>
+                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row2.value)) }</TableCell>
+                        <TableCell align="right">{ (row2.value + row2.vat) - totalPaymentEachInvoice }</TableCell>
+                        <TableCell align="right">{ totalPaymentEachInvoice }</TableCell>
+                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row2.vat)) }</TableCell>
+                        <TableCell align="right">{row2.created_by}</TableCell>
                       </TableRow>
-                    )}
+                    )})}
                   </TableBody>
                 </Table>
               </>
@@ -134,58 +152,39 @@ function Row(props) {
 }
 
 Row.propTypes = {
-  row: PropTypes.string
-  // row: PropTypes.shape({
-  //   id: PropTypes.number.isRequired,
-  //   full_name: PropTypes.string.isRequired,
-  //   pt_name: PropTypes.string.isRequired,
-  //   total_po: PropTypes.number.isRequired,
-  //   total_payment: PropTypes.number.isRequired,
-  //   total_vat: PropTypes.number.isRequired,
-  //   history: PropTypes.arrayOf(
-  //     PropTypes.shape({
-  //       amount: PropTypes.number.isRequired,
-  //       customerId: PropTypes.string.isRequired,
-  //       date: PropTypes.string.isRequired,
-  //     }),
-  //   ),
-  // }).isRequired,
+  row: PropTypes.object.isRequired
 };
 
-// const rows = [
-//   createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 3.99),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 4.99),
-//   createData('Eclair', 262, 16.0, 24, 6.0, 3.79),
-//   createData('Cupcake', 305, 3.7, 67, 4.3, 2.5),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
-// ];
-
-export default function TableRecapInv() {
+export default function TableRecapInv({data}) {
   // const classes = useStyles();
-  const { listPt } = useSelector((state)=>state.dashboard)
-  const listMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  // const { listPt } = useSelector((state)=>state.dashboard)
+  const listPt = []
   
-  useEffect(()=>{
-    
-  },[])
-
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
         <TableHead >
           <TableRow >
             <TableCell />
-            <TableCell>Month</TableCell>
-            <TableCell align="right">PPN IN</TableCell>
-            <TableCell align="right">PPN OUT</TableCell>
+            <TableCell align="left">PO Number</TableCell>
+            <TableCell align="left">Vendor</TableCell>
+            <TableCell align="right">Inv Count</TableCell>
+            <TableCell align="right">PO Value</TableCell>
+            <TableCell align="right">Outstanding</TableCell>
+            <TableCell align="right">Paid</TableCell>
+            <TableCell align="right">VAT</TableCell>
+            <TableCell align="right">Input By</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { listMonth.length > 0 ? listMonth.map((row , index) => (
-            <Row key={index} row={row} />
+          { data.length > 0 ? data.map((row) => (
+            <Row key={row.id} row={row} />
           )) : (<TableRow/>) }
         </TableBody>
       </Table>
     </TableContainer>
   );
+}
+TableRecapInv.propTypes = {
+  data : PropTypes.array.isRequired,
 }

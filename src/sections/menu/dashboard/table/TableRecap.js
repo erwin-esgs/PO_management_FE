@@ -8,6 +8,7 @@ import { tableCellClasses } from '@mui/material/TableCell';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import SkeletonLoading from '../../../../components/SkeletonLoading'
+import TableRecapInv from './TableRecapInv'
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getDatas } from '../../../../redux/slices/dashboard';
@@ -15,62 +16,46 @@ import axios from '../../../../utils/axios';
 import { setSession } from '../../../../utils/jwt';
 
 
-
-// const useStyles = makeStyles(() => ({
-//     table: {
-//         backgroundColor: '#04d49f'
-//     }
-// }))
-
-// const StyledTableCell = styled(TableCell)(({ theme }) => ({
-//   [`&.${tableCellClasses.head}`]: {
-//     backgroundColor: theme.palette.primary,
-//     color: theme.palette.common.white,
-//   },
-//   [`&.${tableCellClasses.body}`]: {
-//     fontSize: 14,
-//   },
-// }));
-
-function createData(name, calories, fat, carbs, protein, price) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3,
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1,
-      },
-    ],
-  };
-}
-
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const [isLoadingRow, setIsLoadingRow] = React.useState(false);
-  const [listPo, setListPo] = React.useState([]);
+  // const [listPo, setListPo] = React.useState([]);
   const { startDate , endDate } = useSelector((state) =>  state.dashboard );
 
-  async function getData(id) {
-    setIsLoadingRow(true)
-    const response = await axios.post('/api/dashboardPo' , {id_pt : id , startDate , endDate});
-    if(response.data){
-      Promise.resolve().then( () => setListPo(response.data.data) )
-      .then( () => setSession(response.data.token) )
-      .then( () => setIsLoadingRow(false) )
-    }
-  }
+
+  // async function getData(id) {
+  //   setIsLoadingRow(true)
+  //   const response = await axios.post('/api/dashboardPo' , {id_pt : id , startDate , endDate});
+  //   if(response.data){
+  //     Promise.resolve().then( () => setListPo(response.data.data) )
+  //     .then( () => setSession(response.data.token) )
+  //     .then( () => setIsLoadingRow(false) )
+  //   }
+  // }
+
+  let totalPoValue = 0
+  let totalPaymentAllInvoice = 0
+  let totalVatAllInvoice = 0
+
+  row?.po?.forEach((row2) => {
+    totalPoValue += row2.value
+    row2?.invoice?.forEach((invoice) => {
+      let paymentEachInvoice 
+      try {
+        paymentEachInvoice = JSON.parse(invoice.payment)
+      } catch (error) {
+        paymentEachInvoice = []
+      }
+      paymentEachInvoice.forEach((item)=>{
+        totalPaymentAllInvoice += item.payment_value
+        totalPaymentAllInvoice += item.payment_vat
+        totalVatAllInvoice += item.payment_vat
+      })
+    })
+  })
+
+  
 
   return (
     <>
@@ -81,7 +66,7 @@ function Row(props) {
             size="small"
             onClick={() => {
               setOpen(!open)
-              getData(row.id)
+              // getData(row.id)
             }}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -91,13 +76,14 @@ function Row(props) {
           {row.full_name}
         </TableCell>
         <TableCell align="right">{row.pt_name}</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.total_po)) }</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.total_payment)) }</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.total_po - row.total_payment))  }</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.total_vat)) }</TableCell>
+        <TableCell align="right">{ row.po.length }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalPoValue))  }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalPoValue - totalPaymentAllInvoice)) }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalPaymentAllInvoice)) }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalVatAllInvoice)) }</TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={7}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={8}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               { isLoadingRow ? (<SkeletonLoading isLoading={isLoadingRow} top={0.05} bot={0.05} /> ) : (
@@ -105,41 +91,8 @@ function Row(props) {
                 <Typography variant="h6" gutterBottom component="div">
                   List PO : {row.pt_name}
                 </Typography>
-                <Table size="large" aria-label="purchases">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="left">Date</TableCell>
-                      <TableCell align="left">Created By</TableCell>
-                      <TableCell align="right">Vendor</TableCell>
-                      <TableCell align="right">Value</TableCell>
-                      <TableCell align="right">Paid</TableCell>
-                      <TableCell align="right">Outstanding</TableCell>
-                      <TableCell align="right">VAT</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {listPo.map((row2) => {
-                      const payment = JSON.parse(row2.payment)
-                      let totalPayment = 0
-                      payment?.forEach((item)=>{
-                        if( item?.payment_date){
-                          totalPayment += parseInt(item.percentage, 10) * row2.value / 100
-                        }
-                      })
-                      return (
-                      <TableRow key={row2.id} >
-                        <TableCell align="left" component="th" scope="row">{row2.tod}</TableCell>
-                        <TableCell align="left">{row2.created_by}</TableCell>
-                        <TableCell align="right">{row2.vendor_name}</TableCell>
-                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row2.value)) }</TableCell>
-                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalPayment)) }</TableCell>
-                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat( (row2.value - totalPayment) )) }</TableCell>
-                        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row2.vat)) }</TableCell>
-                      </TableRow>
-                    )})}
-                  </TableBody>
-                </Table>
-              </>
+                <TableRecapInv data={row.po} />
+                </>
               ) }
             </Box>
           </Collapse>
@@ -150,21 +103,7 @@ function Row(props) {
 }
 
 Row.propTypes = {
-  row: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    full_name: PropTypes.string.isRequired,
-    pt_name: PropTypes.string.isRequired,
-    total_po: PropTypes.number.isRequired,
-    total_payment: PropTypes.number.isRequired,
-    total_vat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ),
-  }).isRequired,
+  row: PropTypes.object.isRequired,
 };
 
 // const rows = [
@@ -175,10 +114,10 @@ Row.propTypes = {
 //   createData('Gingerbread', 356, 16.0, 49, 3.9, 1.5),
 // ];
 
-export default function TableRecap() {
+export default function TableRecap(props) {
   // const classes = useStyles();
-  const { listPt } = useSelector((state)=>state.dashboard)
-  
+  // const { listPt } = useSelector((state)=>state.dashboard)
+  const { data } = props; // listPt
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -187,18 +126,22 @@ export default function TableRecap() {
             <TableCell />
             <TableCell>PT</TableCell>
             <TableCell align="right">PT Short</TableCell>
-            <TableCell align="right">Total PO</TableCell>
-            <TableCell align="right">Paid</TableCell>
+            <TableCell align="right">PO Count</TableCell>
+            <TableCell align="right">Total PO Value</TableCell>
             <TableCell align="right">Outstanding</TableCell>
+            <TableCell align="right">Paid</TableCell>
             <TableCell align="right">VAT</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { listPt.length > 0 ? listPt.map((row) => (
+          { data.length > 0 ? data.map((row) => (
             <Row key={row.id} row={row} />
           )) : (<TableRow/>) }
         </TableBody>
       </Table>
     </TableContainer>
   );
+}
+TableRecap.propTypes = {
+  data : PropTypes.array.isRequired,
 }
