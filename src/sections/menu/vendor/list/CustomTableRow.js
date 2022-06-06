@@ -19,7 +19,7 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
 
   const dispatch = useDispatch()
   
-  const { id, vendor_name, email, phone, contact, manager, bank_acc, description, created_by, created_at } = row;
+  const { id, vendor_name, email, phone, contact, /* manager, */ bank_acc, description, created_by, created_at } = row;
 
   const [ openMenu , setOpenMenuActions ] = useState(null);
 
@@ -44,17 +44,17 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
+      {/* <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
         <Typography variant="subtitle2" noWrap>
         {id} 
         </Typography>
-      </TableCell>
+      </TableCell> */}
 
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{vendor_name}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{email}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{phone}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{contact}</TableCell>
-      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{manager}</TableCell>
+      {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{manager}</TableCell> */}
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{bank_acc}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{description}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{created_by}</TableCell>

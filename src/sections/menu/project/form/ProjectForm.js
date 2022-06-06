@@ -88,7 +88,7 @@ export default function ProjectForm({text="" , formData=null}) {
         <RHFTextField InputLabelProps={{ shrink: true }} type="date" name="end_date" label="End date" />
         <RHFTextField name="contract_value" label="Contract Value" />
         <RHFTextField name="finance" label="Finance" />
-        <RHFTextField name="project_team" label="Proejct Team" />
+        <RHFTextField name="project_team" label="Project Team" />
 
       </Stack>
 

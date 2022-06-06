@@ -63,12 +63,12 @@ const ROLE_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'id', label: 'ID', align: 'left' },
+  // { id: 'id', label: 'ID', align: 'left' },
   { id: 'vendor_name', label: 'Vendor Name', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'contact', label: 'Contact', align: 'left' },
-  { id: 'manager', label: 'Manager', align: 'left' },
+  // { id: 'manager', label: 'Manager', align: 'left' },
   { id: 'bank_acc', label: 'Bank ACC', align: 'left' },
   { id: 'description', label: 'Description', align: 'left' },
   { id: 'created_by', label: 'Created By', align: 'left' },
@@ -261,18 +261,22 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   
     if (filterName) {
       tableData = tableData.filter((item) => {
+        
         const key = Object.keys(item)
         let result=false
         key.forEach(element => {
+          let itemElement = item[element]
           try {
-            result = ( item[element].toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
+            if(Number.isInteger( itemElement )){
+              itemElement = itemElement.toString()
+            }
+            result = ( itemElement.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
           } catch (error) {
             result = result || false
           }
         });
         return result
-      })
-      ;
+      });
     }
   
     if (filterStatus){

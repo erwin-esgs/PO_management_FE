@@ -68,15 +68,14 @@ const TABLE_HEAD = [
   { id: 'tod', label: 'Date', align: 'left' },
   { id: 'top', label: 'TOP', align: 'left' },
   { id: 'description', label: 'Description', align: 'left' },
-  { id: 'value', label: 'PO Value', align: 'left' },
   { id: 'pt_project', label: 'PT / Project', align: 'left' },
   { id: 'id_vendor', label: 'Vendor', align: 'left' },
-  { id: 'paid', label: 'Paid', align: 'left' },
-  { id: 'outstanding', label: 'Outstanding', align: 'left' },
+  { id: 'value', label: 'Value / VAT / Total', align: 'left' },
+  { id: 'paid', label: 'Paid / Outstanding', align: 'left' },
   // { id: 'tod', label: 'Delivery Date', align: 'left' },
   // { id: 'description', label: 'Description', align: 'left' },
   // { id: 'payment', label: 'Payment', align: 'left' },
-  { id: 'created_by', label: 'Create By', align: 'left' },
+  { id: 'created_by', label: 'Created By', align: 'left' },
   { id: '#', label: '#', align: 'center' },
 ];
 
@@ -121,7 +120,7 @@ export default function PurchaseOrderApp() {
   const { projects } = useSelector((state) => state.project);
   const { vendors } = useSelector((state) => state.vendor);
 
-  const tableData = pos;
+  let tableData = pos;
   
   const [filterName, setFilterName] = useState('');
 
@@ -145,7 +144,6 @@ export default function PurchaseOrderApp() {
     comparator: getComparator(order, orderBy),
     filterName,
   });
-  
   const selectedOne = (data) => {
     dispatch(addOneData(data))
   }
@@ -280,18 +278,22 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   
     if (filterName) {
       tableData = tableData.filter((item) => {
+        
         const key = Object.keys(item)
         let result=false
         key.forEach(element => {
+          let itemElement = item[element]
           try {
-            result = ( item[element].toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
+            if(Number.isInteger( itemElement )){
+              itemElement = itemElement.toString()
+            }
+            result = ( itemElement.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
           } catch (error) {
             result = result || false
           }
         });
         return result
-      })
-      ;
+      });
     }
     if (filterStatus){
       if (filterStatus !== 'all') {

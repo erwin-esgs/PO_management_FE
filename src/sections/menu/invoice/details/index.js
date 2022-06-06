@@ -266,7 +266,7 @@ export default function InvoiceDetails() {
                 <RowResultStyle>
                   <TableCell colSpan={3} />
                   <TableCell align="right">
-                    <Typography variant="h6">Total</Typography>
+                    <Typography variant="h6">Value</Typography>
                   </TableCell>
                   <TableCell align="right" width={140}>
                     <Typography variant="h6">{invoice.value.toLocaleString()}</Typography>
@@ -280,6 +280,16 @@ export default function InvoiceDetails() {
                   </TableCell>
                   <TableCell align="right" width={120}>
                     <Typography variant="h6">{ (invoice.vat).toLocaleString() }</Typography>
+                  </TableCell>
+                </RowResultStyle>
+
+                <RowResultStyle>
+                  <TableCell colSpan={3} />
+                  <TableCell align="right">
+                  <Typography variant="h5">Total</Typography>
+                  </TableCell>
+                  <TableCell align="right" width={120}>
+                    <Typography variant="h5">{ (invoice.value + invoice.vat).toLocaleString() }</Typography>
                   </TableCell>
                 </RowResultStyle>
 

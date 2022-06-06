@@ -34,7 +34,8 @@ export default function PoForm({text="" , formData=null}) {
   const todayDate = new Date().toISOString().split('T')[0]
   
   const LoginSchema = Yup.object().shape({
-    id_pt: Yup.number().required('PT is required'),// .email('Email must be a valid email address'),
+    po_number: Yup.string().required('PO Number is required'),// .email('Email must be a valid email address'),
+    id_pt: Yup.number().required('PT is required'),
     id_project: Yup.number().required('Project is required'),
     id_vendor: Yup.number().required('Vendor is required'),
     value: Yup.number().min(1, "Must be more than 0").required('Value is required'),
@@ -82,31 +83,8 @@ export default function PoForm({text="" , formData=null}) {
 
   const onSubmit = async (data) => {
     try {
-      // console.log(formData?.id, data)
       data.tod = new Date(new Date(data.tod).getTime() + 60 * 60 * 7 * 1000).toISOString().split('T')[0]
-      // WITH PERCENTAGE
-      /* 
-      let percent = 0 
-      if( data.payment ){
-        data.payment.forEach((v,i)=>{
-          data.payment[i].due_date = new Date(new Date(v.due_date).getTime() + 60 * 60 * 7 * 1000).toISOString().split('T')[0]
-          percent += data.payment[i].percentage
-        })
-        data.payment = JSON.stringify(data.payment)
-      }
-      if (percent === 100){
-        Promise.resolve().then( () => {
-          if(formData){
-            return dispatch(editData(formData.id, data))
-          }
-          return dispatch(addData(data))
-        } )
-        .then( () => dispatch(getAll()) )
-        
-      }else{
-        alert("Total percent not 100%")
-      }
-      */
+      
       // console.log(formData?.id , data)
       Promise.resolve().then( () => {
         if(formData){

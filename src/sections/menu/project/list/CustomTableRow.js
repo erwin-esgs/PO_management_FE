@@ -37,20 +37,22 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
   }; 
-  const amountString = new Intl.NumberFormat().format(parseFloat(contract_value));
+
+  // const amountString = new Intl.NumberFormat().format(parseFloat(contract_value));
+
   return (
     <TableRow hover selected={selected}>
       <TableCell padding="checkbox">
         <Checkbox checked={selected} onClick={onSelectRow} />
       </TableCell>
 
-      <TableCell align="left" >{id}</TableCell>
+      {/* <TableCell align="left" >{id}</TableCell> */}
 
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{client_name}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{project_code}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{start_date}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{end_date}</TableCell>
-      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{amountString}</TableCell>
+      {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{amountString}</TableCell> */}
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{finance}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{project_team}</TableCell>
       {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{list_item}</TableCell> */}

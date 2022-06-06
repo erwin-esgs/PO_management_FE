@@ -68,8 +68,8 @@ const TABLE_HEAD = [
   { id: 'po_project', label: 'PO : Project', align: 'left' },
   { id: 'due_date', label: 'Due Date', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: 'value', label: 'Value', align: 'left' },
-  { id: 'vat', label: 'VAT', align: 'left' },
+  { id: 'value', label: 'Value / VAT / Total', align: 'left' },
+  // { id: 'vat', label: 'VAT', align: 'left' },
   { id: 'description', label: 'Description', align: 'left' },
   // { id: 'created_by', label: 'Create By', align: 'left' },
   { id: '#', label: '#', align: 'center' },
@@ -276,18 +276,22 @@ function applySortFilter({ tableData, comparator, filterName, filterStatus, filt
   
     if (filterName) {
       tableData = tableData.filter((item) => {
+        
         const key = Object.keys(item)
         let result=false
         key.forEach(element => {
+          let itemElement = item[element]
           try {
-            result = ( item[element].toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
+            if(Number.isInteger( itemElement )){
+              itemElement = itemElement.toString()
+            }
+            result = ( itemElement.toLowerCase().indexOf(filterName.toLowerCase()) !== -1 ) || result
           } catch (error) {
             result = result || false
           }
         });
         return result
-      })
-      ;
+      });
     }
     
     if (filterStatus){

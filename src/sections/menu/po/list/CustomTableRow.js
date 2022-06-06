@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Checkbox, TableRow, TableCell, Typography, MenuItem, Button, Link } from '@mui/material';
+import { Checkbox, TableRow, TableCell, Typography, MenuItem, Button, Link, Divider  } from '@mui/material';
 // components
 // import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
@@ -23,8 +23,8 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
 
   const dispatch = useDispatch()
   
-  const { id, po_number, pt_name, project_code, vendor_name, value, tod, top, description, payment, created_by } = row;
-
+  const { id, po_number, pt_name, project_code, vendor_name, value, vat, total, tod, top, description, invoice, created_by } = row;
+  // console.log(row)
   const [ openMenu , setOpenMenuActions ] = useState(null);
 
   const { po } = useSelector((state) => state.po);
@@ -43,16 +43,22 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
   const handleCloseMenu = () => {
     setOpenMenuActions(null);
   }; 
-  const amountString = new Intl.NumberFormat().format(parseFloat(value));
-  let paidPercentage = 0
-  const arrPayment = payment? JSON.parse(payment) : null
-  if(Array.isArray(arrPayment)){
-    arrPayment.forEach(element => {
-      if("payment_date" in element){
-        paidPercentage += element.percentage
-      }
-    });
-  }
+
+  let totalPaymentAllInvoice = 0
+  let totalVatAllInvoice = 0
+  invoice?.forEach((invoice) => {
+    let paymentEachInvoice 
+    try {
+      paymentEachInvoice = JSON.parse(invoice.payment)
+    } catch (error) {
+      paymentEachInvoice = []
+    }
+    paymentEachInvoice.forEach((item)=>{
+      totalPaymentAllInvoice += item.payment_value
+      // totalPaymentAllInvoice += item.payment_vat
+      totalVatAllInvoice += item.payment_vat
+    })
+  })
   
   return (
     <TableRow hover selected={selected}>
@@ -64,11 +70,31 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{tod}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{top}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{description}</TableCell> 
-      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{amountString}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{pt_name} / {project_code}</TableCell>
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{vendor_name}</TableCell>
-      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{ new Intl.NumberFormat().format(parseFloat( paidPercentage * value / 100 ))  }</TableCell>
-      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{ new Intl.NumberFormat().format(parseFloat( value-(paidPercentage * value / 100) ))  }</TableCell>
+      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>
+        { new Intl.NumberFormat().format(parseFloat( value ))  }
+        <Divider />
+        <Typography variant="caption" sx={{ color: 'text.secondary' }} noWrap>
+        { new Intl.NumberFormat().format(parseFloat( vat ))  }
+        </Typography>
+        <Divider />
+        <Typography variant="subtitle2"  noWrap>
+        { new Intl.NumberFormat().format(parseFloat( total ))  }
+        </Typography>
+      </TableCell>
+
+      <TableCell align="left" sx={{ textTransform: 'uppercase' }}>
+        <Typography variant="body2" sx={{ color: 'green' }} noWrap>
+          { new Intl.NumberFormat().format(parseFloat( totalPaymentAllInvoice ))  }
+        </Typography>
+        <Divider />
+        <Typography variant="body2" sx={{ color: 'red' }} noWrap>
+          { new Intl.NumberFormat().format(parseFloat( value-totalPaymentAllInvoice ))  }
+        </Typography>
+      </TableCell>
+      
+      {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{ new Intl.NumberFormat().format(parseFloat( value-totalPaymentAllInvoice ))  }</TableCell> */}
       {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{tod}</TableCell> */}
       {/* <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{payment}</TableCell> */}
       <TableCell align="left" sx={{ textTransform: 'uppercase' }}>{created_by}</TableCell>

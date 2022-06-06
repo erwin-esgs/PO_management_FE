@@ -27,10 +27,10 @@ export default function VendorForm({text="" , formData=null}) {
 
   const LoginSchema = Yup.object().shape({
     vendor_name: Yup.string().required('Client Code is required'),// .email('Email must be a valid email address'),
-    email: Yup.string().required('Project Code is required'),
+    email: Yup.string().nullable(),
     phone: Yup.string().nullable(),
     contact: Yup.string().nullable(),
-    manager: Yup.string().nullable(),
+    // manager: Yup.string().nullable(),
     bank_acc: Yup.string().nullable(),
     description: Yup.string().nullable(),
   });
@@ -42,7 +42,7 @@ export default function VendorForm({text="" , formData=null}) {
       email: formData.email ? formData.email : '',
       phone: formData.phone ? formData.phone : '',
       contact: formData.contact ? formData.contact : '',
-      manager: formData.manager ? formData.manager : '',
+      // manager: formData.manager ? formData.manager : '',
       bank_acc: formData.bank_acc ? formData.bank_acc : '',
       description: formData.description ? formData.description : '',
     };
@@ -52,7 +52,7 @@ export default function VendorForm({text="" , formData=null}) {
       email: '',
       phone: '',
       contact: '',
-      manager: '',
+      // manager: '',
       bank_acc: '',
       description: '',
     };
@@ -95,7 +95,7 @@ export default function VendorForm({text="" , formData=null}) {
         <RHFTextField name="email" label="Email" />
         <RHFTextField name="phone" label="Phone" />
         <RHFTextField name="contact" label="Contact" />
-        <RHFTextField name="manager" label="Manager" />
+        {/* <RHFTextField name="manager" label="Manager" /> */}
         <RHFTextField name="bank_acc" label="Bank ACC" />
         <RHFTextField name="description" label="Description" />
 
