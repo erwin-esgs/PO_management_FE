@@ -107,7 +107,7 @@ export default function PoForm({text="" , formData=null}) {
         alert("Total percent not 100%")
       }
       */
-
+      // console.log(formData?.id , data)
       Promise.resolve().then( () => {
         if(formData){
           return dispatch(editData(formData.id, data))

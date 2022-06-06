@@ -49,7 +49,7 @@ function Row(props) {
       }
       paymentEachInvoice.forEach((item)=>{
         totalPaymentAllInvoice += item.payment_value
-        totalPaymentAllInvoice += item.payment_vat
+        // totalPaymentAllInvoice += item.payment_vat
         totalVatAllInvoice += item.payment_vat
       })
     })
