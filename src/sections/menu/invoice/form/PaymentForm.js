@@ -113,9 +113,7 @@ export default function PaymentForm({text="" }) {
     }
   };
 
-  const calculateTax = ()=>{
 
-  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

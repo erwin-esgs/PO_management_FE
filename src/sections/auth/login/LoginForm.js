@@ -31,8 +31,8 @@ export default function LoginForm() {
   });
 
   const defaultValues = {
-    email: 'admin',
-    password: 'P455w0rd!!!',
+    email: '',
+    password: '',
     remember: true,
   };
 
