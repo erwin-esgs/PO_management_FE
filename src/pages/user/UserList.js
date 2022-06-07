@@ -18,7 +18,7 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
-  Skeleton ,
+  // Skeleton ,
 } from '@mui/material';
 // routes
 import { PATH_PAGE } from '../../routes/paths';
@@ -99,7 +99,7 @@ export default function UserList() {
 
   const { themeStretch } = useSettings();
 
-  const { users, user, isLoading } = useSelector((state) => state.user);
+  const { users, isLoading } = useSelector((state) => state.user);
   const tableData = users;
 
   const [filterName, setFilterName] = useState('');

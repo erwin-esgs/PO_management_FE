@@ -62,18 +62,20 @@ AuthProvider.propTypes = {
   children: PropTypes.node,
 };
 
+function decodeJWT(accessToken) {
+  try {
+    const payload = accessToken.split('.');
+    const user = JSON.parse(atob(payload[1]));
+    return user;
+  } catch (error) {
+    return null
+  }
+}
+
 function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   
-  function decodeJWT(accessToken) {
-    try {
-      const payload = accessToken.split('.');
-      const user = JSON.parse(atob(payload[1]));
-      return user;
-    } catch (error) {
-      return null
-    }
-  }
+  
 
   useEffect(() => {
     const initialize = async () => {
@@ -176,4 +178,4 @@ function AuthProvider({ children }) {
   );
 }
 
-export { AuthContext, AuthProvider };
+export { AuthContext, AuthProvider , decodeJWT};

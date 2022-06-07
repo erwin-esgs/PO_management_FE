@@ -4,7 +4,7 @@
 // import Label from '../../../components/Label';
 // import Iconify from '../../../components/Iconify';
 import SvgIconStyle from '../../../components/SvgIconStyle';
-
+import {decodeJWT} from "../../../contexts/JWTContext"
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <SvgIconStyle src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
@@ -26,57 +26,109 @@ const ICONS = {
   menuItem: getIcon('ic_menu_item'),
 };
 
-const navConfig = [
-  // GENERAL
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'general',
-    items: [
-      // { title: 'dashboard invoice', path: '/dashboard/invoice', icon: ICONS.dashboard },
-      { title: 'dashboard', path: '/dashboard', icon: ICONS.dashboard },
-      { title: 'purchase order', path: '/po', icon: ICONS.cart },
-      { title: 'invoice', path: '/invoice', icon: ICONS.invoice },
-    ],
-  },
-
-  // MASTER DATA
-  // ----------------------------------------------------------------------
-  {
-    subheader: 'master data',
-    items: [
-
-      // VENDOR
-      {
-        title: 'vendor',
-        path: '/vendor',
-        icon: ICONS.ecommerce,
-      },
-
-      // PROJECT
-      {
-        title: 'project',
-        path: '/project',
-        icon: ICONS.booking,
-      },
-
-      // PT
-      {
-        title: 'PT',
-        path: '/pt',
-        icon: ICONS.banking,
-      },
+export const navConfig = ()=>{ 
+  const user = decodeJWT( localStorage.getItem('accessToken') )
+  if(user){
+    if(user.role === 0){
+      // ADMIN
+      return [
+        // GENERAL
+        // ----------------------------------------------------------------------
+        {
+          subheader: 'general',
+          items: [
+            // { title: 'dashboard invoice', path: '/dashboard/invoice', icon: ICONS.dashboard },
+            { title: 'dashboard', path: '/dashboard', icon: ICONS.dashboard },
+            { title: 'purchase order', path: '/po', icon: ICONS.cart },
+            { title: 'invoice', path: '/invoice', icon: ICONS.invoice },
+          ],
+        },
       
-      // USER
-      {
-        title: 'user',
-        path: '/user',
-        icon: ICONS.user,
-      },
-    ],
-  },
+        // MASTER DATA
+        // ----------------------------------------------------------------------
+        {
+          subheader: 'master data',
+          items: [
+      
+            // VENDOR
+            {
+              title: 'vendor',
+              path: '/vendor',
+              icon: ICONS.ecommerce,
+            },
+      
+            // PROJECT
+            {
+              title: 'project',
+              path: '/project',
+              icon: ICONS.booking,
+            },
+      
+            // PT
+            {
+              title: 'PT',
+              path: '/pt',
+              icon: ICONS.banking,
+            },
+            
+            // USER
+            {
+              title: 'user',
+              path: '/user',
+              icon: ICONS.user,
+            },
+          ],
+        },
+      
+      ];
+    } 
+  } // END IF
 
+  // USER
+  return [
+    // GENERAL
+    // ----------------------------------------------------------------------
+    {
+      subheader: 'general',
+      items: [
+        // { title: 'dashboard invoice', path: '/dashboard/invoice', icon: ICONS.dashboard },
+        { title: 'dashboard', path: '/dashboard', icon: ICONS.dashboard },
+        { title: 'purchase order', path: '/po', icon: ICONS.cart },
+        { title: 'invoice', path: '/invoice', icon: ICONS.invoice },
+      ],
+    },
+  
+    // MASTER DATA
+    // ----------------------------------------------------------------------
+    {
+      subheader: 'master data',
+      items: [
+  
+        // VENDOR
+        {
+          title: 'vendor',
+          path: '/vendor',
+          icon: ICONS.ecommerce,
+        },
+  
+        // PROJECT
+        {
+          title: 'project',
+          path: '/project',
+          icon: ICONS.booking,
+        },
+  
+        // PT
+        {
+          title: 'PT',
+          path: '/pt',
+          icon: ICONS.banking,
+        },
+        
+      ],
+    },
+  ];
 
- 
-];
+}
 
 export default navConfig;

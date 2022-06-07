@@ -18,7 +18,7 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
-  Skeleton ,
+  // Skeleton ,
 } from '@mui/material';
 // routes
 import { PATH_PAGE } from '../../routes/paths';
@@ -116,9 +116,9 @@ export default function PurchaseOrderApp() {
   const { themeStretch } = useSettings();
 
   const { pos , isLoading } = useSelector((state) =>  state.po );
-  const { pts } = useSelector((state) => state.pt);
-  const { projects } = useSelector((state) => state.project);
-  const { vendors } = useSelector((state) => state.vendor);
+  // const { pts } = useSelector((state) => state.pt);
+  // const { projects } = useSelector((state) => state.project);
+  // const { vendors } = useSelector((state) => state.vendor);
 
   let tableData = pos;
   

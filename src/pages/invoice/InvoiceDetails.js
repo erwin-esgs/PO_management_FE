@@ -5,18 +5,18 @@ import { Container } from '@mui/material';
 // routes
 import { PATH_PAGE } from '../../routes/paths';
 // _mock_
-import { _invoices } from '../../_mocks';
+// import { _invoices } from '../../_mocks';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 import SkeletonLoading from '../../components/SkeletonLoading';
-import Iconify from '../../components/Iconify';
+// import Iconify from '../../components/Iconify';
 // sections
 import Invoice from '../../sections/menu/invoice/details';
-import ButtonPopover from '../../components/popover/ButtonPopover';
-import PaymentForm from '../../sections/menu/invoice/form/PaymentForm';
+// import ButtonPopover from '../../components/popover/ButtonPopover';
+// import PaymentForm from '../../sections/menu/invoice/form/PaymentForm';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getDetail} from '../../redux/slices/invoice';
@@ -26,7 +26,7 @@ import { getDetail} from '../../redux/slices/invoice';
 export default function InvoiceDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { id } = useParams();
 

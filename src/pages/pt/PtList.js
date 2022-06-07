@@ -18,7 +18,7 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
-  Skeleton ,
+  // Skeleton ,
 } from '@mui/material';
 // routes
 import { PATH_PAGE } from '../../routes/paths';

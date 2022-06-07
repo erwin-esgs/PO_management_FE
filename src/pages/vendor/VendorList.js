@@ -18,7 +18,7 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
-  Skeleton ,
+  // Skeleton ,
 } from '@mui/material';
 // routes
 import { PATH_PAGE } from '../../routes/paths';
@@ -104,7 +104,7 @@ export default function VendorList() {
 
   const { themeStretch } = useSettings();
 
-  const { vendors, isLoading , vendor} = useSelector((state) => state.vendor);
+  const { vendors, isLoading } = useSelector((state) => state.vendor);
   const tableData = vendors;
 
   const [filterName, setFilterName] = useState('');

@@ -14,7 +14,7 @@ import AuthGuard from '../guards/AuthGuard';
 import { PATH_DASHBOARD, PATH_PAGE } from './paths';
 // components
 import LoadingScreen from '../components/LoadingScreen';
-
+import {decodeJWT} from "../contexts/JWTContext"
 // ----------------------------------------------------------------------
 
 const Loadable = (Component) => (props) => {
@@ -29,7 +29,7 @@ const Loadable = (Component) => (props) => {
 };
 
 export default function Router() {
-
+  const user = decodeJWT( localStorage.getItem('accessToken') )
   // console.log(window.location.href)
   return useRoutes([
     {
@@ -101,7 +101,7 @@ export default function Router() {
             { path: 'detail/:id', element: <InvoiceDetails /> },
           ],
         },
-        { path: PATH_PAGE.user, element: <UserList /> },
+        { path: PATH_PAGE.user, element: user?.role === 0 ? <UserList /> : <Navigate to="/404" replace /> },
         { path: PATH_PAGE.vendor, element: <VendorList /> },
         { path: PATH_PAGE.project, element: <ProjectList /> },
         { path: PATH_PAGE.pt, element: <PtList /> },

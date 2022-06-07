@@ -27,16 +27,16 @@ export default function VendorForm({text="" , formData=null}) {
 
   const LoginSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),// .email('Email must be a valid email address'),
-    email: Yup.string().email().required('Email is required'),
+    email: Yup.string().required('Email / Username is required'),
     password: Yup.string(),
-    role: Yup.string(),
+    role: Yup.number().min(0, 'Not valid'),
   });
 
   const defaultValues = {
     name: formData ? formData.name : '',
     email: formData ? formData.email : '',
-    password: formData ? formData.password : '',
-    role: formData ? formData.role : '',
+    password: '',
+    role: formData ? formData.role : 0,
   };
 
   const methods = useForm({
@@ -75,7 +75,7 @@ export default function VendorForm({text="" , formData=null}) {
         <RHFTextField name="name" label="Name" />
         <RHFTextField name="email" label="Email" />
         <RHFTextField type="password" name="password" label="Password" />
-        <RHFTextField name="role" label="Role" />
+        <RHFTextField type="number" name="role" label="Role" />
 
       </Stack>
 

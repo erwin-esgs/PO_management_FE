@@ -1,20 +1,20 @@
 // @mui
-import { useState, useEffect } from 'react';
-import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Stack, Button, Box, TextField } from '@mui/material';
+import {  useEffect } from 'react';
+// import { useTheme } from '@mui/material/styles';
+import { Container, Grid, Box } from '@mui/material';
 // hooks
-import useAuth from '../../hooks/useAuth';
+// import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 // _mock_
 // import { _appFeatured, _appAuthors, _appInstalled, _appRelated, _appInvoices } from '../../_mock';
 // components
 import Page from '../../components/Page';
 // sections
-import AppWidgetSummary from '../../sections/menu/dashboard/widget/AppWidgetSummary';
+// import AppWidgetSummary from '../../sections/menu/dashboard/widget/AppWidgetSummary';
 import TableRecap from '../../sections/menu/dashboard/table/TableRecap';
 import FilterForm from '../../sections/menu/dashboard/form/FilterForm';
 // assets
-import { SeoIllustration } from '../../assets';
+// import { SeoIllustration } from '../../assets';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getDatas } from '../../redux/slices/dashboard';
@@ -22,14 +22,14 @@ import { getDatas } from '../../redux/slices/dashboard';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-  const { user } = useAuth();
-  const theme = useTheme();
+  // const { user } = useAuth();
+  // const theme = useTheme();
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
 
   const {  listPt  } = useSelector((state) =>  state.dashboard );
-  const todayDate = new Date(new Date( ).getTime() + 60 * 60 * 7 * 1000).toISOString().split('T')[0]
-  const [ dateFilter, setDateFilter ] = useState([ todayDate , todayDate ])
+  // const todayDate = new Date(new Date( ).getTime() + 60 * 60 * 7 * 1000).toISOString().split('T')[0]
+  // const [ dateFilter, setDateFilter ] = useState([ todayDate , todayDate ])
 
   useEffect(() => {
     // dispatch(ptGetAll())

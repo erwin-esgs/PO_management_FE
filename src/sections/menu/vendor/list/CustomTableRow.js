@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+// import { useState } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Checkbox, TableRow, TableCell, Typography, MenuItem } from '@mui/material';
+// import { useTheme } from '@mui/material/styles';
+import { Checkbox, TableRow, TableCell } from '@mui/material';
 // components
 // import Label from '../../../../components/Label';
 import Iconify from '../../../../components/Iconify';
-import { TableMoreMenu } from '../../../../components/table';
+// import { TableMoreMenu } from '../../../../components/table';
 import  ButtonPopover  from '../../../../components/popover/ButtonPopover';
 import  VendorForm  from '../form/VendorForm';
-import { useDispatch, useSelector } from '../../../../redux/store';
+import {  useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -17,26 +17,26 @@ import { useDispatch, useSelector } from '../../../../redux/store';
 
 export default function CustomTableRow({ row, selected, selectedOne, onSelectRow }) {
 
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   
-  const { id, vendor_name, email, phone, contact, /* manager, */ bank_acc, description, created_by, created_at } = row;
+  const {  vendor_name, email, phone, contact, /* manager, */ bank_acc, description, created_by } = row;
 
-  const [ openMenu , setOpenMenuActions ] = useState(null);
+  // const [ openMenu , setOpenMenuActions ] = useState(null);
 
   const { vendor } = useSelector((state) => state.vendor);
 
-  const handleOpenMenu = (event) => {
-    setOpenMenuActions(event.currentTarget);
-    selectedOne()
-  };
+  // const handleOpenMenu = (event) => {
+  //   setOpenMenuActions(event.currentTarget);
+  //   selectedOne()
+  // };
 
-  const passSelectedOne = (event) => {
+  const passSelectedOne = () => {
     selectedOne()
   }
 
-  const handleCloseMenu = () => {
-    setOpenMenuActions(null);
-  }; 
+  // const handleCloseMenu = () => {
+  //   setOpenMenuActions(null);
+  // }; 
 
   return (
     <TableRow hover selected={selected}>

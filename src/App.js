@@ -24,7 +24,7 @@ export default function App() {
   
   const navigate = useNavigate();
 
-  axios.interceptors.response.use( (response) => response , (error) => {
+  axios.interceptors.response.use( (response) => response , () => {
     logout();
     navigate(PATH_AUTH.login, { replace: true });
   } );

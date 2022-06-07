@@ -18,7 +18,6 @@ import {
   TableContainer,
   TablePagination,
   FormControlLabel,
-  Skeleton ,
 } from '@mui/material';
 // routes
 import { PATH_PAGE } from '../../routes/paths';
@@ -113,13 +112,13 @@ export default function InvoiceApp() {
 
   const { invoices , isLoading } = useSelector((state) =>  state.invoice );
   const { pts } = useSelector((state) => state.pt);
-  const { projects } = useSelector((state) => state.project);
-  const { pos } = useSelector((state) => state.po);
+  // const { projects } = useSelector((state) => state.project);
+  // const { pos } = useSelector((state) => state.po);
 
   const tableData = invoices;
   
   const [filterName, setFilterName] = useState('');
-  const [filterStatus, setFilterStatus] = useState('paid');
+  // const [filterStatus, setFilterStatus] = useState('paid');
 
   // useEffect(() => {
   //   setIsLoadingPage(  isLoading )

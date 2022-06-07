@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
     Skeleton ,
@@ -11,9 +11,9 @@ SkeletonLoading.propTypes = {
     children: PropTypes.node,
   };
 export default function SkeletonLoading({ isLoading , top = 0.15 , bot = 0.3 , children }) {
-    const loading = ()=>{
-        console.log("Loading...")
-    }
+    // const loading = ()=>{
+    //     console.log("Loading...")
+    // }
     if(isLoading){
         return(
             <>
