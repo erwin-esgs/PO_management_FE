@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, Typography , Grid} from '@mui/material';
+import { Stack, Typography , Grid ,Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 // import Iconify from '../../../../components/Iconify';
@@ -25,9 +25,9 @@ import { editData, getDetail } from '../../../../redux/slices/invoice';
 PaymentForm.propTypes = {
   text: PropTypes.string,
   // formData: PropTypes.object,
-  selectedIndex: PropTypes.number,
+  // selectedIndex: PropTypes.number,
 };
-export default function PaymentForm({text="" ,  selectedIndex=null}) {
+export default function PaymentForm({text="" }) {
 
   const dispatch = useDispatch()
   const { invoice } = useSelector((state) =>  state.invoice );
@@ -67,8 +67,9 @@ export default function PaymentForm({text="" ,  selectedIndex=null}) {
 
   const {
     reset,
-    // setError,
+    setValue,
     handleSubmit,
+    getValues,
     // register,
     formState: { isSubmitting },
   } = methods;
@@ -112,14 +113,9 @@ export default function PaymentForm({text="" ,  selectedIndex=null}) {
     }
   };
 
-  // const handleCustomOnChange = (data)=>{
-  //   if(po){
-  //     // setPaymentNumber( data.target.value * po.value / 100)
-  //     setPaymentNumber( data.value * po.value / 100)
-  //   }
-  // }
+  const calculateTax = ()=>{
 
-  // const percentage = register('percentage')
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -132,6 +128,7 @@ export default function PaymentForm({text="" ,  selectedIndex=null}) {
         </Grid>
         <Grid item xs={12} md={6} >
           <RHFTextField name="payment_vat" type="number" label="Payment VAT" InputLabelProps={{ shrink: true }} />
+          <Button onClick={()=>setValue("payment_vat", (getValues("payment_value") *11/100 ))}>Calculate 11% tax</Button>
         </Grid>
         <Grid item xs={12} md={6} >
           <RHFTextField name="payment_date" type="date" label="Payment Date" InputLabelProps={{ shrink: true }} />
