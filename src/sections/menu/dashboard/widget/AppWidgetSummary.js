@@ -29,10 +29,11 @@ AppWidgetSummary.propTypes = {
   percent: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   total: PropTypes.number.isRequired,
+  subtotal: PropTypes.number,
   sx: PropTypes.object,
 };
 
-export default function AppWidgetSummary({ title, percent, total, chartColor, chartData, sx, ...other }) {
+export default function AppWidgetSummary({ title, percent, total, subtotal, chartColor, chartData, sx, ...other }) {
   const theme = useTheme();
 
   const chartOptions = {
@@ -73,7 +74,8 @@ export default function AppWidgetSummary({ title, percent, total, chartColor, ch
           </Typography>
         </Stack>
 
-        <Typography variant="h3">{fNumber(total)}</Typography>
+        <Typography variant="h4">{fNumber(total)}</Typography>
+        {subtotal ? (<Typography variant="subtitle1">VAT : {fNumber(subtotal)}</Typography>) : ''}
       </Box>
 
       <ReactApexChart type="bar" series={[{ data: chartData }]} options={chartOptions} width={60} height={36} />
