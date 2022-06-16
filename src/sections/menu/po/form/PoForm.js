@@ -39,6 +39,7 @@ export default function PoForm({text="" , formData=null}) {
     id_project: Yup.number().required('Project is required'),
     id_vendor: Yup.number().required('Vendor is required'),
     value: Yup.number().min(1, "Must be more than 0").required('Value is required'),
+    vat: Yup.number().nullable(true),
     tod: Yup.date().required('Term payment is required'),
     top: Yup.string().nullable(true),
     description: Yup.string().nullable(true),
@@ -63,6 +64,7 @@ export default function PoForm({text="" , formData=null}) {
     id_project: formData?.id_project ? formData.id_project : selectionDefaultValue.id_project,
     id_vendor: formData?.id_vendor ? formData.id_vendor : selectionDefaultValue.id_vendor,
     value: formData?.value ? formData.value : 0,
+    vat: formData?.vat ? formData.vat : 0,
     tod: formData?.tod ? formData.tod : todayDate,
     top: formData?.top ? formData.top : '',
     description: formData?.description ? formData.description : '',
@@ -151,12 +153,13 @@ export default function PoForm({text="" , formData=null}) {
             <RHFTextField name="tod" type="date" label="PO Date" InputLabelProps={{ shrink: true }} />
             <RHFTextField name="top"  label="Payment term" multiline />
             <RHFTextField name="value" type="number" min={0} label="Value" />
-            <RHFTextField name="description" label="Description (Multiline)" multiline />
+            <RHFTextField name="vat" type="number" min={0} label="VAT" />
+            {/* <RHFTextField name="description" label="Description (Multiline)" multiline /> */}
 
           </Stack>
         </Grid>
         <Grid item xs={12}>
-        
+        <RHFTextField name="description" label="Description (Multiline)" multiline />
         {/* {(() => {
           let options = [];
           for (let i = 0; i <= numRow; i++) {
