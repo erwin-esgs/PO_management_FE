@@ -45,7 +45,7 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
   }; 
 
   let totalPaymentAllInvoice = 0
-  let totalVatAllInvoice = 0
+  // let totalPaymentVatAllInvoice = 0
   invoice?.forEach((invoice) => {
     let paymentEachInvoice 
     try {
@@ -55,8 +55,8 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
     }
     paymentEachInvoice.forEach((item)=>{
       totalPaymentAllInvoice += item.payment_value
-      // totalPaymentAllInvoice += item.payment_vat
-      totalVatAllInvoice += item.payment_vat
+      // totalPaymentVatAllInvoice += item.payment_vat
+      totalPaymentAllInvoice += item.payment_vat
     })
   })
   
@@ -90,7 +90,7 @@ export default function CustomTableRow({ row, selected, selectedOne, onSelectRow
         </Typography>
         <Divider />
         <Typography variant="body2" sx={{ color: 'red' }} noWrap>
-          { new Intl.NumberFormat().format(parseFloat( value-totalPaymentAllInvoice ))  }
+          { new Intl.NumberFormat().format(parseFloat( total -totalPaymentAllInvoice ))  }
         </Typography>
       </TableCell>
       
