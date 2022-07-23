@@ -49,9 +49,9 @@ function Row(props) {
     //   .then( () => setIsLoadingRow(false) )
     // }
   }
-
   let totalPaymentAllInvoice = 0
   let totalVatAllInvoice = 0
+  const rowValueWithVat = row?.value + row?.vat
   row?.invoice?.forEach((invoice) => {
     let paymentEachInvoice 
     try {
@@ -60,6 +60,7 @@ function Row(props) {
       paymentEachInvoice = []
     }
     paymentEachInvoice.forEach((item)=>{
+      // console.log(`${item.payment_value} + ${item.payment_vat} `)
       totalPaymentAllInvoice += item.payment_value
       totalPaymentAllInvoice += item.payment_vat
       totalVatAllInvoice += item.payment_vat
@@ -86,8 +87,8 @@ function Row(props) {
         </TableCell>
         <TableCell align="left">{row.vendor_name}</TableCell>
         <TableCell align="right">{ row.invoice.length }</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.value))  }</TableCell>
-        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(row.value - totalPaymentAllInvoice)) }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(rowValueWithVat))  }</TableCell>
+        <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(rowValueWithVat - totalPaymentAllInvoice)) }</TableCell>
         <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalPaymentAllInvoice)) }</TableCell>
         <TableCell align="right">{ new Intl.NumberFormat().format(parseFloat(totalVatAllInvoice)) }</TableCell>
         <TableCell align="right">{row.created_by}</TableCell>
